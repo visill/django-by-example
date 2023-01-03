@@ -1,1 +1,16 @@
-/venv
+### vscode ###
+.vscode
+
+
+### Django ###
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+
+media/cache
+static
+.env
+venv
+db.sqlite3
