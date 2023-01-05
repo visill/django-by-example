@@ -21,8 +21,16 @@ def post_detail(request,year,month,day,post):
 
 def post_share(request, post_id):
     post = get_object_or_404(Post, id=post_id, status='published')
+    sent = False
+    
     form = EmailPostForm(request.POST or None)
     if form.is_valid():
         cd = form.cleaned_data
-        send_mail('Ex mail','text text','example@gmail.com',['target@gmail.com'],fail_silently=False)
-    return render(request,'blog/post/share.html',{'post':post,'form':form})
+        post_url = request.build_absolute_uri(post.get_absolute_url())
+        subject = f'{cd["name"]} recomend you read {post.title}'
+        message = f"Read {post.title} at {post_url}\n\n{cd['name']}\'s comments: {cd['comments']}"
+        send_mail(subject,message,'admin@myblig.com',[cd['to']])
+        sent = True
+    return render(request,
+                  'blog/post/share.html',
+                  {'post':post,'form':form,'sent':sent})
